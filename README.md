@@ -81,7 +81,7 @@ To point to an arbitrary byte within a packed word, `char*` and `void*` are form
 * **Bits 15-1**: The 15-bit word address in RAM.
 
 > [!NOTE]
-> Why are bits 44-42 zero? In the BESM-6 hardware word layout, bits 48-42 represent a 7-bit biased floating-point exponent. Notice that when bit 48 is `1` and bits 44-42 are `0`, the numerical value of the 7-bit field (bits 48-42) is exactly **$64 + \text{offset\_enc} \times 8$**. This clever bit alignment is the key to ultra-fast byte extraction.
+> Why are bits 44-42 zero? In the BESM-6 hardware word layout, bits 48-42 represent a 7-bit biased floating-point exponent. Notice that when bit 48 is `1` and bits 44-42 are `0`, the numerical value of the 7-bit field (bits 48-42) is exactly $`64 + \text{offset\_enc} \times 8`$. This clever bit alignment is the key to ultra-fast byte extraction.
 
 ---
 
