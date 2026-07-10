@@ -41,7 +41,7 @@ Bit:  48   41 40   33 32   25 24   17 16    9 8     1
      │  MSB  │       │       │       │       │  LSB  │
 ```
 
-An array of $N$ characters occupies $\lceil N/6 \rceil$ words in memory, terminated by a NUL (`0x00`) byte. A standalone scalar `char` variable is stored in Byte #5 (bits 8–1), with bits 48–9 zeroed.
+An array of $N$ characters occupies $\lceil N/6 \rceil$ words in memory, terminated by a NUL (`0x00`) byte. A standalone scalar `char` variable is stored in Byte #5 (bits 8-1), with bits 48-9 zeroed.
 
 ---
 
@@ -65,23 +65,23 @@ Bit:  48 47  45 44  42            16 15             1
 ```
 
 ### Regular Pointers
-Pointers to word-aligned scalar types or structs contain the **15-bit word address** in bits 15–1, with bits 48–16 set to zero. Pointer arithmetic (`p++`) increments the word address by 1.
+Pointers to word-aligned scalar types or structs contain the **15-bit word address** in bits 15-1, with bits 48-16 set to zero. Pointer arithmetic (`p++`) increments the word address by 1.
 
 ### Fat Pointers (Byte Pointers)
 To point to an arbitrary byte within a packed word, `char*` and `void*` are formatted as **Fat Pointers**:
 * **Bit 48 (Tag)**: Always set to `1` to distinguish a fat pointer from a regular pointer (where bit 48 is `0`).
-* **Bits 47–45 (Byte Offset Code, `offset_enc`)**: A 3-bit code indicating which of the six bytes is being addressed, encoded as the shift distance in bytes from the LSB:
-  * `5` (`101₂`): Byte #0 (MSB, bits 48–41)
-  * `4` (`100₂`): Byte #1 (bits 40–33)
-  * `3` (`011₂`): Byte #2 (bits 32–25)
-  * `2` (`010₂`): Byte #3 (bits 24–17)
-  * `1` (`001₂`): Byte #4 (bits 16–9)
-  * `0` (`000₂`): Byte #5 (LSB, bits 8–1)
-* **Bits 44–42**: Always zero.
-* **Bits 15–1**: The 15-bit word address in RAM.
+* **Bits 47-45 (Byte Offset Code, `offset_enc`)**: A 3-bit code indicating which of the six bytes is being addressed, encoded as the shift distance in bytes from the LSB:
+  * `5` (`101₂`): Byte #0 (MSB, bits 48-41)
+  * `4` (`100₂`): Byte #1 (bits 40-33)
+  * `3` (`011₂`): Byte #2 (bits 32-25)
+  * `2` (`010₂`): Byte #3 (bits 24-17)
+  * `1` (`001₂`): Byte #4 (bits 16-9)
+  * `0` (`000₂`): Byte #5 (LSB, bits 8-1)
+* **Bits 44-42**: Always zero.
+* **Bits 15-1**: The 15-bit word address in RAM.
 
 > [!NOTE]
-> Why are bits 44–42 zero? In the BESM-6 hardware word layout, bits 48–42 represent a 7-bit biased floating-point exponent. Notice that when bit 48 is `1` and bits 44–42 are `0`, the numerical value of the 7-bit field (bits 48–42) is exactly **$64 + \text{offset\_enc} \times 8$**. This clever bit alignment is the key to ultra-fast byte extraction.
+> Why are bits 44-42 zero? In the BESM-6 hardware word layout, bits 48-42 represent a 7-bit biased floating-point exponent. Notice that when bit 48 is `1` and bits 44-42 are `0`, the numerical value of the 7-bit field (bits 48-42) is exactly **$64 + \text{offset\_enc} \times 8$**. This clever bit alignment is the key to ultra-fast byte extraction.
 
 ---
 
@@ -110,7 +110,7 @@ The "messiness" of sub-word addressing is completely abstracted by the compiler'
 #### 1. Byte Dereference (`*a`) in 4 Machine Instructions
 The BESM-6 instruction set includes **`ASX`** (*Accumulator Shift by Exponent*), a floating-point instruction that right-shifts the accumulator by the integer value in the memory operand's exponent field minus 64.
 
-Because a fat pointer's exponent field is pre-configured to hold $64 + \text{offset\_enc} \times 8$, the shift distance calculated by hardware is exactly $\text{offset\_enc} \times 8$ bits! Extracting a byte compiles to:
+Because a fat pointer's exponent field is pre-configured to hold $`64 + \text{offset\_enc} \times 8`$, the shift distance calculated by hardware is exactly $`\text{offset\_enc} \times 8`$ bits! Extracting a byte compiles to:
 
 ```madlen
     WTC ptr        ; Load word address from lower 15 bits of fat pointer into index register M
