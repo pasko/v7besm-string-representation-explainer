@@ -2,6 +2,7 @@
 
 > [!NOTE]
 > This was written by an LLM, with almost no human review.
+>
 > -- pasko@
 
 An architectural and implementation analysis of C strings, pointer representations, and byte manipulation on the Soviet **BESM-6** (БЭСМ-6) mainframe, based on the open-source restoration projects: [c-compiler](https://github.com/besm6/c-compiler), [v7besm](https://github.com/besm6/v7besm) (Seventh Edition Unix port), and [simh](https://github.com/besm6/simh) (hardware simulator).
